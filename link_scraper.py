@@ -55,9 +55,6 @@ raw_data = pd.DataFrame(list(zip(title, employee, link)), columns=['Title', 'Emp
 
 DF = raw_data.drop_duplicates(['Title','Employee'])
 
+DF[:10]
+
 DF.to_csv('/Users/yuyara/Documents/Coding/python/Data_pipeline/Career_skill/job_data.csv', index=False, header=True)
-
-
-
-
-
