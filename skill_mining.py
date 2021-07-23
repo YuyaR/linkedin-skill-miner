@@ -37,7 +37,7 @@ for s in final_list:
     sentence = [i.lower() for i in sentence]
     words.extend(sentence)
 
-keywords = {'planning': None, 'communication': None, 'analy': None} #not sure how to do a wild card thing like analy*
+keywords = {'planning': None, 'communication': None, 'analy': None} 
 
 for kw in keywords.keys():
     word_count = len(fnmatch.filter(words, f'{kw}*'))
