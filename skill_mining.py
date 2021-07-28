@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 import requests
 import fnmatch
+import matplotlib.pyplot as plt
 
 def mine():
     DF = pd.read_csv('/Users/yuyara/Documents/Coding/python/Data_pipeline/Career_skill/Data/job_data.csv')
@@ -38,12 +39,15 @@ def mine():
         sentence = [i.lower() for i in sentence]
         words.extend(sentence)
 
+    global keywords
     keywords = {'planning': None, 'communication': None, 'analy': None, 'organiz': None, 'team': None, 'independent': None} 
 
     for kw in keywords.keys():
         word_count = len(fnmatch.filter(words, f'{kw}*'))
         keywords[kw] = word_count
 
-    print(keywords)
+def plot():
+    plt.bar(x=keywords.keys(), height=keywords.values())
+    plt.show()
 
     
