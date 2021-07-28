@@ -33,20 +33,28 @@ locbar.grid(row=5, column=0, sticky='w')
 progress = ttk.Progressbar(root, orient='horizontal', mode='indeterminate', length=400)
 progress.grid(row=7, column=0)
 
+progtext = tk.Text(root, height=1, width=60)
+progtext.grid(row=8, column=0)
+
+
 def run():
     progress.start()
 
     job = jobbar.get()
     loc = locbar.get()
 
-    scrape(job, loc)
-    mine()
+    progtext.insert('end', 'job starting...')
 
+    scrape(job, loc)
+    progtext.insert('end', 'busy scraping...')
+    mine()
+    progtext.insert('end', 'almost there...')
+    plot()
     progress.stop()
 
 
-run = tk.Button(root, text='Start mining', command=run)
-run.grid(row=6, column=0, sticky='e')
+runbutton = tk.Button(root, text='Start mining', command=run)
+runbutton.grid(row=6, column=0, sticky='e')
 
 
 root.mainloop()

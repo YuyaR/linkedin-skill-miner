@@ -6,7 +6,7 @@ import pandas as pd
 
 def scrape(job_name: str, location: str):
     options = Options()
-    options.headless = False #change to True if you don't want the browser to actually open
+    options.headless = True #change to True if you don't want the browser to actually open
     driver = webdriver.Chrome(options=options, executable_path="/Users/yuyara/Downloads/chromedriver 2") 
     action = ActionChains(driver)
 
@@ -14,7 +14,7 @@ def scrape(job_name: str, location: str):
 
     driver.get(url)
 
-    time.sleep(2)
+    time.sleep(1)
 
     while True:
         oldH = 0
@@ -57,8 +57,6 @@ def scrape(job_name: str, location: str):
     raw_data = pd.DataFrame(list(zip(title, employee, link)), columns=['Title', 'Employee', 'Link'])
 
     DF = raw_data.drop_duplicates(['Title','Employee'])
-
-    DF[:10]
 
     DF.to_csv('/Users/yuyara/Documents/Coding/python/Data_pipeline/Career_skill/job_data.csv', index=False, header=True)
 
