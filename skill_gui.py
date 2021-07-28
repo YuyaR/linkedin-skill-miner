@@ -2,13 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 from link_scraper import *
 from skill_mining import *
+import skill_mining
 
 root = tk.Tk()
-print('im here')
 
 root.title('Career Skill Miner 1.0')
 root.config(bg='yellow')
-root.geometry('500x300')
+root.geometry('475x300')
 
 msg = '''Welcome to Career Skill Miner!
 Just enter your dream career and location and 
@@ -29,25 +29,31 @@ loclb.grid(row=4, column=0, sticky='w')
 locbar = tk.Entry(root, width=50)
 locbar.grid(row=5, column=0, sticky='w')
 
-
+progresstext = tk.Text(root, height=1, width=60)
+progresstext.grid(row=7, column=0)
 progress = ttk.Progressbar(root, orient='horizontal', mode='indeterminate', length=400)
-progress.grid(row=7, column=0)
+progress.grid(row=8, column=0)
 
 def run():
     progress.start()
+    progresstext.insert('end', 'job started...')
+
 
     job = jobbar.get()
     loc = locbar.get()
 
+    progresstext.insert('end', 'busy getting all them jobs...')
     scrape(job, loc)
+
+    progresstext.insert('end', 'almost there...')
     mine()
 
     progress.stop()
-
+    k = skill_mining.keywords
+    plot(k)
 
 run = tk.Button(root, text='Start mining', command=run)
 run.grid(row=6, column=0, sticky='e')
-
 
 root.mainloop()
 print('i got to the end')
