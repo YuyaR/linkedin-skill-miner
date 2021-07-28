@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 import requests
 import fnmatch
-import matplotlib.pyplot as plt
 
 def mine():
     DF = pd.read_csv('/Users/yuyara/Documents/Coding/python/Data_pipeline/Career_skill/Data/job_data.csv')
