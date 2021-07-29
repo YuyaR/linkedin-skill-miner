@@ -4,13 +4,15 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import pandas as pd
 
-def scrape(job_name: str, location: str):
+def scrape(job: str, location: str):
     options = Options()
     options.headless = False #change to True if you don't want the browser to actually open
     driver = webdriver.Chrome(options=options, executable_path="/Users/yuyara/Downloads/chromedriver 2") 
     action = ActionChains(driver)
 
-    url = f'https://www.linkedin.com/jobs/search/?keywords={job_name}&location={location}'
+    job = job.lower()
+    location = location.lower()
+    url = f'https://www.linkedin.com/jobs/search/?keywords={job}&location={location}'
 
     driver.get(url)
 
@@ -38,8 +40,6 @@ def scrape(job_name: str, location: str):
         if oldH == latestH:
             break
 
-
-
     listings = driver.find_element_by_xpath('//*[@id="main-content"]/section[2]/ul') #contains all posts
     posts = listings.find_elements_by_xpath('.//*[@class="base-card__full-link"]') #contains hyperlink
     len(posts)
@@ -58,6 +58,6 @@ def scrape(job_name: str, location: str):
 
     DF = raw_data.drop_duplicates(['Title','Employee'])
 
-    DF.to_csv('/Users/yuyara/Documents/Coding/python/Data_pipeline/Career_skill/job_data.csv', index=False, header=True)
+    DF.to_csv('~/job_data.csv', index=False, header=True)
 
     driver.close()

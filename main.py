@@ -52,8 +52,8 @@ def run():
     k = skill_mining.keywords
     plot(k)
 
-run = tk.Button(root, text='Start mining', command=run)
-run.grid(row=6, column=0, sticky='e')
+runbutton = tk.Button(root, text='Start mining', command=run)
+runbutton.grid(row=6, column=0, sticky='e')
 
 root.mainloop()
 print('i got to the end')

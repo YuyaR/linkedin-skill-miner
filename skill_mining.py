@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 import fnmatch
 import matplotlib.pyplot as plt
 
-DF = pd.read_csv('/Users/yuyara/Documents/Coding/python/Data_pipeline/Career_skill/job_data.csv')
+DF = pd.read_csv('~/job_data.csv')
 
 def mine(n=len(DF)):
     links = list(DF['Link'][:n])
@@ -53,14 +53,17 @@ def mine(n=len(DF)):
 
     global keywords
 
-    keywords = {'planning': None, 'communication': None, 'analy': None, 'organiz': None, 'team': None, 'independent': None} 
+    keywords = {'planning': None, 'communication': None, 'analy': None, 'organi': None,
+     'independen': None, 'creativ': None, 'collabor': None, 'manage': None, 'initiat': None, 'lead': None}
 
     for kw in keywords.keys():
         word_count = len(fnmatch.filter(words, f'{kw}*'))
         keywords[kw] = word_count
 
 def plot(dic):
-    plt.bar(x=dic.keys(), height=dic.values())
+    skills = ['planning', 'communication', 'analysis', 'organisation', 'independence', 'creativity', 'collaboration', 'management', 'initiative', 'leadership']
+    plt.bar(x=skills, height=dic.values())
+    plt.title('The top 10 Skills desired in your dream job!')
     plt.show()
 
 # if __name__ == '__main__':
