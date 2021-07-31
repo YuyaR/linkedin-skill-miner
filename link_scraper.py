@@ -4,14 +4,20 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import pandas as pd
 
+def process(x: str):
+    x = x.lower()
+    x = x.replace(' ', '%20')
+    return x
+
 def scrape(job: str, location: str):
     options = Options()
-    options.headless = False #change to True if you don't want the browser to actually open
+    options.headless = True #change to True if you don't want the browser to actually open
     driver = webdriver.Chrome(options=options, executable_path="/Users/yuyara/Downloads/chromedriver 2") 
     action = ActionChains(driver)
 
-    job = job.lower()
-    location = location.lower()
+    process(job)
+    process(location)
+
     url = f'https://www.linkedin.com/jobs/search/?keywords={job}&location={location}'
 
     driver.get(url)
@@ -32,6 +38,7 @@ def scrape(job: str, location: str):
             action.move_to_element(button).click().perform()
         except:
             break
+
         time.sleep(0.5)
         driver.execute_script(f'window.scrollTo(50, {latestH}+{500})')
         time.sleep(0.5)

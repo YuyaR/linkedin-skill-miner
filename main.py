@@ -7,7 +7,7 @@ import skill_mining
 root = tk.Tk()
 
 root.title('Career Skill Miner 1.0')
-root.config(bg='yellow')
+root.config(bg='azure')
 root.geometry('475x300')
 
 msg = '''Welcome to Career Skill Miner!
@@ -30,9 +30,9 @@ locbar = tk.Entry(root, width=50)
 locbar.grid(row=5, column=0, sticky='w')
 
 progresstext = tk.Text(root, height=1, width=60)
-progresstext.grid(row=7, column=0)
+progresstext.grid(row=8, column=0)
 progress = ttk.Progressbar(root, orient='horizontal', mode='indeterminate', length=400)
-progress.grid(row=8, column=0)
+progress.grid(row=9, column=0)
 
 def run():
     progress.start()
@@ -56,4 +56,3 @@ runbutton = tk.Button(root, text='Start mining', command=run)
 runbutton.grid(row=6, column=0, sticky='e')
 
 root.mainloop()
-print('i got to the end')
