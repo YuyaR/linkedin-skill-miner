@@ -13,7 +13,7 @@ root.geometry('475x300')
 msg = '''Welcome to Career Skill Miner!
 Just enter your dream career and location and 
 we can show you the top 10 wanted skills in this field.
-You can also highlight specific skills to see their individual outcome.'''
+'''
 welc = tk.Text(root, height=6, width=60, wrap='word')
 welc.grid(row=0, column=0, columnspan=2, sticky='n')
 welc.insert('end', msg)
@@ -46,7 +46,7 @@ def run():
     scrape(job, loc)
 
     progresstext.insert('end', 'almost there...')
-    mine()
+    mineText()
 
     progress.stop()
     k = skill_mining.keywords

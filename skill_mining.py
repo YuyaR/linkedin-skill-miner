@@ -9,7 +9,6 @@ import fnmatch
 import matplotlib.pyplot as plt
 
 DF = pd.read_csv('./job_data.csv')
-final_list = []
 
 def getText(n=len(DF)):
     links = list(DF['Link'][:n])
@@ -46,9 +45,12 @@ def getText(n=len(DF)):
     final_list = [i for i in bullets if i] #removing empty strings
     return final_list
 
+
+
 def mineText():
+    all_text = getText()
     words = []
-    for s in final_list:
+    for s in all_text:
         sentence = s.split(' ')
         sentence = [i.lower() for i in sentence]
         words.extend(sentence)
