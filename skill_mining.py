@@ -8,9 +8,10 @@ from selenium.webdriver.chrome.options import Options
 import fnmatch
 import matplotlib.pyplot as plt
 
-DF = pd.read_csv('~/job_data.csv')
+DF = pd.read_csv('./job_data.csv')
+final_list = []
 
-def mine(n=len(DF)):
+def getText(n=len(DF)):
     links = list(DF['Link'][:n])
     options = Options()
     options.headless = True
@@ -43,8 +44,9 @@ def mine(n=len(DF)):
         # bunch_texts.append(text)
 
     final_list = [i for i in bullets if i] #removing empty strings
+    return final_list
 
-    #now text mining
+def mineText():
     words = []
     for s in final_list:
         sentence = s.split(' ')

@@ -65,6 +65,6 @@ def scrape(job: str, location: str):
 
     DF = raw_data.drop_duplicates(['Title','Employee'])
 
-    DF.to_csv('~/job_data.csv', index=False, header=True)
+    DF.to_csv('./job_data.csv', index=False, header=True)
 
     driver.close()
