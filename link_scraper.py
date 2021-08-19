@@ -6,9 +6,10 @@ import pandas as pd
 
 class LinkScraper:
 
-    def __init__(self, job: str, location: str):
+    def __init__(self, job: str, location: str, chrome_path: str):
         self.job = job
         self.location = location
+        self.chrome_path = chrome_path
 
     @staticmethod
     def process(x: str):
@@ -20,10 +21,9 @@ class LinkScraper:
     def job(self):
         return self.__job
     
-    # FIXIT 
     @job.setter
     def job(self, job):
-        # self.__job = cls.process(job)
+        self.__job = self.process(job)
         pass
 
     @property
@@ -32,7 +32,7 @@ class LinkScraper:
     
     @location.setter
     def location(self, location):
-        # self.__location = process(location)
+        self.__location = self.process(location)
         pass
 
     @staticmethod
@@ -69,7 +69,7 @@ class LinkScraper:
     def scrape(self, headless=True):
         options = Options()
         options.headless = headless #change to True if you don't want the browser to actually open
-        driver = webdriver.Chrome(options=options, executable_path="/Users/yuyara/Downloads/chromedriver 2") 
+        driver = webdriver.Chrome(options=options, executable_path=(self.chrome_path) 
         action = ActionChains(driver)
 
         url = f'https://www.linkedin.com/jobs/search/?keywords={self.job}&location={self.location}'
@@ -77,9 +77,8 @@ class LinkScraper:
         driver.get(url)
 
         time.sleep(2)
-
-        # FIXIT 
-        #cls.scroll()
+        
+        self.scroll()
 
         listings = driver.find_element_by_xpath('//*[@id="main-content"]/section[2]/ul') #contains all posts
         posts = listings.find_elements_by_xpath('.//*[@class="base-card__full-link"]') #contains hyperlink
@@ -99,6 +98,5 @@ class LinkScraper:
 
         df = pd.DataFrame(list(zip(title, employee, link)), columns=['Title', 'Employee', 'Link'])
         
-        #FIXTITITI
-        #cls.remove_dup(df)
+        self.remove_dup(df)
 
