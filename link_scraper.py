@@ -35,21 +35,8 @@ class LinkScraper:
         # self.__location = process(location)
         pass
 
-    def scrape(self):
-        options = Options()
-        options.headless = True #change to True if you don't want the browser to actually open
-        driver = webdriver.Chrome(options=options, executable_path="/Users/yuyara/Downloads/chromedriver 2") 
-        action = ActionChains(driver)
-
-        process(job)
-        process(location)
-
-        url = f'https://www.linkedin.com/jobs/search/?keywords={job}&location={location}'
-
-        driver.get(url)
-
-        time.sleep(2)
-
+    @staticmethod
+    def scroll():
         while True:
             oldH = 0
             latestH = 1
@@ -73,6 +60,22 @@ class LinkScraper:
             if oldH == latestH:
                 break
 
+
+    def scrape(self, headless=True):
+        options = Options()
+        options.headless = headless #change to True if you don't want the browser to actually open
+        driver = webdriver.Chrome(options=options, executable_path="/Users/yuyara/Downloads/chromedriver 2") 
+        action = ActionChains(driver)
+
+        url = f'https://www.linkedin.com/jobs/search/?keywords={self.job}&location={self.location}'
+
+        driver.get(url)
+
+        time.sleep(2)
+
+        # FIXIT 
+        #cls.scroll()
+
         listings = driver.find_element_by_xpath('//*[@id="main-content"]/section[2]/ul') #contains all posts
         posts = listings.find_elements_by_xpath('.//*[@class="base-card__full-link"]') #contains hyperlink
         len(posts)
@@ -87,10 +90,14 @@ class LinkScraper:
             title.append(titles[i].text)
             employee.append(company[i].text)
 
-        raw_data = pd.DataFrame(list(zip(title, employee, link)), columns=['Title', 'Employee', 'Link'])
+        driver.close()
+        
+        df = pd.DataFrame(list(zip(title, employee, link)), columns=['Title', 'Employee', 'Link'])
+        
+        return df
 
-        DF = raw_data.drop_duplicates(['Title','Employee'])
+    @staticmethod
+    def remove_dup(df):
+        DF = df.drop_duplicates(['Title','Employee'])
 
         DF.to_csv('./job_data.csv', index=False, header=True)
-
-        driver.close()
