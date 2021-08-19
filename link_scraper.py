@@ -60,6 +60,11 @@ class LinkScraper:
             if oldH == latestH:
                 break
 
+    @staticmethod
+    def remove_dup(df):
+        DF = df.drop_duplicates(['Title','Employee'])
+
+        DF.to_csv('./job_data.csv', index=False, header=True)
 
     def scrape(self, headless=True):
         options = Options()
@@ -91,13 +96,9 @@ class LinkScraper:
             employee.append(company[i].text)
 
         driver.close()
-        
+
         df = pd.DataFrame(list(zip(title, employee, link)), columns=['Title', 'Employee', 'Link'])
         
-        return df
+        #FIXTITITI
+        #cls.remove_dup(df)
 
-    @staticmethod
-    def remove_dup(df):
-        DF = df.drop_duplicates(['Title','Employee'])
-
-        DF.to_csv('./job_data.csv', index=False, header=True)

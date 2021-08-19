@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from link_scraper import *
-from skill_mining import *
-import skill_mining
+import link_scraper as sp
+import skill_mining as sm
 
 root = tk.Tk()
 
@@ -41,9 +40,11 @@ def run():
 
     job = jobbar.get()
     loc = locbar.get()
+    task = sp.LinkScraper(job, loc)
 
     progresstext.insert('end', 'busy getting all them jobs...')
-    scrape(job, loc)
+    
+    task.scrape()
 
     progresstext.insert('end', 'almost there...')
     mineText()
