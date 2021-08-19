@@ -4,7 +4,18 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import pandas as pd
 
+'''
+This module contains a class which purpose is to scrapes all hrefs (links) to the returned hits
+for a job search with a specified location on Linkedin.
+'''
+
 class LinkScraper:
+    '''
+    class attributes:
+        job: type of job for search (case-insensitive)
+        location: the location where the jobs are posted (case-insensitive)
+        chrome_path: the path to Chrome Driver on your device
+    '''
 
     def __init__(self, job: str, location: str, chrome_path: str):
         self.job = job
@@ -13,10 +24,15 @@ class LinkScraper:
 
     @staticmethod
     def process(x: str):
+        '''
+        This static method changes the entered string into correct format to be inserted in the url
+        Returns:
+            str: lower case string with space replaced with correct representation in url format
+        '''
         x = x.lower()
         x = x.replace(' ', '%20')
         return x
-    
+
     @property
     def job(self):
         return self.__job
@@ -37,6 +53,10 @@ class LinkScraper:
 
     @staticmethod
     def scroll():
+        '''
+        This static method scrolls to the bottom of the Linkedin page
+        Used after the search
+        '''
         while True:
             oldH = 0
             latestH = 1
@@ -48,7 +68,7 @@ class LinkScraper:
             
             try:
                 button = driver.find_element_by_xpath('//*[@id="main-content"]/section[2]/button')
-                action.move_to_element(button).click().perform()
+                action.move_to_element(button).click().perform() #clicks button for more to scroll
             except:
                 break
 
@@ -62,15 +82,25 @@ class LinkScraper:
 
     @staticmethod
     def remove_dup(df):
+        '''
+        This static method uses the job listing title and employer name to drop duplicated listings
+        and stores the unique results in a dataframe
+        Returns dataframe in local repository under name 'job_data.csv'
+        '''
         DF = df.drop_duplicates(['Title','Employee'])
 
         DF.to_csv('./job_data.csv', index=False, header=True)
 
     def scrape(self, headless=True):
+        '''
+        This function performs the webscrapping, also using the static methods in the same class.
+
+        Argument:
+            headless: default, True; can change to False if user wants to see real time scraping on browser
+        '''
         options = Options()
         options.headless = headless #change to True if you don't want the browser to actually open
         driver = webdriver.Chrome(options=options, executable_path=(self.chrome_path) 
-        action = ActionChains(driver)
 
         url = f'https://www.linkedin.com/jobs/search/?keywords={self.job}&location={self.location}'
 
