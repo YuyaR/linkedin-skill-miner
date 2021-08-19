@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-import link_scraper as sp
-import skill_mining as sm
+from link_scraper import LinkScraper
+from skill_mining import TextMiner
+
+#TODO: add find path to chromedriver option
+
 
 root = tk.Tk()
 
@@ -28,6 +31,12 @@ loclb.grid(row=4, column=0, sticky='w')
 locbar = tk.Entry(root, width=50)
 locbar.grid(row=5, column=0, sticky='w')
 
+#FIXME
+pathlb = tk.Label(text='ChromeDriver: ')
+pathlb.grid(row=6, column=0, columnspan=2, sticky='w')
+pathbar = tk.Entry(root, width=50)
+pathbar.grid(row=7, column=0, sticky='w')
+
 progresstext = tk.Text(root, height=1, width=60)
 progresstext.grid(row=8, column=0)
 progress = ttk.Progressbar(root, orient='horizontal', mode='indeterminate', length=400)
@@ -40,14 +49,17 @@ def run():
 
     job = jobbar.get()
     loc = locbar.get()
-    task = sp.LinkScraper(job, loc)
+    chr = pathbar.get()
 
-    progresstext.insert('end', 'busy getting all them jobs...')
-    
+    task = LinkScraper(job, loc, chr)
     task.scrape()
 
+    progresstext.insert('end', 'busy getting all them jobs...')
+
     progresstext.insert('end', 'almost there...')
-    mineText()
+    
+    task2 = TextMiner()
+    task2.getText()
 
     progress.stop()
     k = skill_mining.keywords
