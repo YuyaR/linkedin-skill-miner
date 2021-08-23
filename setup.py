@@ -7,7 +7,8 @@ setup(
     description='A graphic user interface that allows you to find out the top desired transferable skills in your dream career',
     url='https://github.com/YuyaR/linkedin-skill-miner.git',
     author='Yuya Ra',
-    License='MIT',
+    author_email='yuyacademia@gmail.com',
+    license='agpl-3',
     packages=find_packages(),
     install_requires=['selenium','pandas','matplotlib']
 )
