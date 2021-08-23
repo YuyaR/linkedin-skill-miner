@@ -4,7 +4,7 @@ from link_scraper import LinkScraper
 from skill_mining import TextMiner
 
 #TODO: add find path to chromedriver option
-
+#TODO: which file to add descriptions
 
 root = tk.Tk()
 
