@@ -1,0 +1,8 @@
+README.md
+setup.cfg
+setup.py
+careerskills.egg-info/PKG-INFO
+careerskills.egg-info/SOURCES.txt
+careerskills.egg-info/dependency_links.txt
+careerskills.egg-info/requires.txt
+careerskills.egg-info/top_level.txt
