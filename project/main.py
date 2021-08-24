@@ -1,16 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog as fd
 from link_scraper import LinkScraper
 from skill_mining import TextMiner
+import skill_mining
 
-#TODO: add find path to chromedriver option
-#TODO: which file to add descriptions
 
 root = tk.Tk()
 
 root.title('Career Skill Miner 1.0')
 root.config(bg='azure')
-root.geometry('475x300')
+root.geometry('500x350')
 
 msg = '''Welcome to Career Skill Miner!
 Just enter your dream career and location and 
@@ -31,16 +31,22 @@ loclb.grid(row=4, column=0, sticky='w')
 locbar = tk.Entry(root, width=50)
 locbar.grid(row=5, column=0, sticky='w')
 
-#FIXME
-pathlb = tk.Label(text='ChromeDriver: ')
+pathlb = tk.Label(text='Select your ChromeDriver: ')
 pathlb.grid(row=6, column=0, columnspan=2, sticky='w')
-pathbar = tk.Entry(root, width=50)
+pathbar = tk.Entry(root, width=40)
 pathbar.grid(row=7, column=0, sticky='w')
 
+def browse():
+    filename = fd.askopenfilename()
+    pathbar.insert(tk.END, filename)
+
+browsebt = tk.Button(root, text='browse', command=browse)
+browsebt.grid(row=7, column=0, sticky='e')
+
 progresstext = tk.Text(root, height=1, width=60)
-progresstext.grid(row=8, column=0)
+progresstext.grid(row=9, column=0)
 progress = ttk.Progressbar(root, orient='horizontal', mode='indeterminate', length=400)
-progress.grid(row=9, column=0)
+progress.grid(row=10, column=0)
 
 def run():
     progress.start()
@@ -49,16 +55,16 @@ def run():
 
     job = jobbar.get()
     loc = locbar.get()
-    chr = pathbar.get()
+    chp = pathbar.get()
 
-    task = LinkScraper(job, loc, chr)
+    task = LinkScraper(job, loc, chp)
     task.scrape()
 
     progresstext.insert('end', 'busy getting all them jobs...')
 
     progresstext.insert('end', 'almost there...')
     
-    task2 = TextMiner()
+    task2 = TextMiner(chp)
     task2.getText()
 
     progress.stop()
@@ -66,6 +72,6 @@ def run():
     plot(k)
 
 runbutton = tk.Button(root, text='Start mining', command=run)
-runbutton.grid(row=6, column=0, sticky='e')
+runbutton.grid(row=11, column=0, sticky='e')
 
 root.mainloop()
