@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 #TODO: make import-all file
 #TODO: see if can skip creating the data frame
 
-class TextMiner(LinkScraper):
+class TextMiner:
     '''
     This class inherits the following attributes from LinkScraper:
 
@@ -26,9 +26,13 @@ class TextMiner(LinkScraper):
     most common transferable skills. 
     The result is displayed by a barplot.
     '''
-    DF = pd.read_csv('./job_data.csv')
 
-    def getText(self, n=len(DF)):
+    def __init__(self, chrome_path):
+        self.chrome_path = chrome_path
+        self.DF = pd.read_csv('./job_data.csv')
+        
+
+    def getText(self, n=None):
         '''
         This function uses selenium to scrape all bullet points from each job listing (from links)
 
@@ -39,7 +43,10 @@ class TextMiner(LinkScraper):
             a barplot displaying the resulting count for each skill
         '''
 
-        links = list(DF['Link'][:n])
+        if n == None:
+            n = len(self.DF)
+
+        links = list(self.DF['Link'][:n])
         options = Options()
         options.headless = True
         driver = webdriver.Chrome(options=options, executable_path=self.chrome_path) 
@@ -72,11 +79,13 @@ class TextMiner(LinkScraper):
 
         final_list = [i for i in bullets if i] #removing empty strings
         
-        self.mineText(final_list)
+        print(final_list)
 
-        self.plot(keywords)
+        self._mineText(final_list)
 
-    def mineText(self, final_list):
+        self._plot(keywords)
+
+    def _mineText(self, final_list):
         '''
         This method counts how many times each of the skill keyword in the keywords dictionary
         is found in the scraped bullet points
@@ -85,7 +94,7 @@ class TextMiner(LinkScraper):
             a dictionary with the skill and its number of occurrence
         '''
         words = []
-        for s in all_text:
+        for s in final_list:
             sentence = s.split(' ')
             sentence = [i.lower() for i in sentence]
             words.extend(sentence) #collects individual lowercased words from scraped bulletpoint texts
@@ -103,7 +112,7 @@ class TextMiner(LinkScraper):
     #TODO: make graph horizontal (if not wordcloud)
 
     @staticmethod
-    def plot(dic):
+    def _plot(dic):
         '''
         a static method visualising the frequency of occurrence of each skill in a barplot.
         '''
@@ -112,7 +121,9 @@ class TextMiner(LinkScraper):
         plt.title('How the Top Transferable Skills are Desired in Your Dream Job')
         plt.show()
 
-    # if __name__ == '__main__':
-    #     mine()
-    #     print(keywords)
+
+if __name__ == '__main__':
+    m = TextMiner('/Users/yuyara/Downloads/chromedriver 2')
+    m.getText()
+    print(keywords)
         
