@@ -9,6 +9,7 @@ This module contains a class which purpose is to scrapes all hrefs (links) to th
 for a job search with a specified location on Linkedin.
 '''
 
+
 options = Options()
 options.headless = True
 
@@ -19,8 +20,8 @@ class LinkScraper:
         job: type of job for search (case-insensitive)
         location: the location where the jobs are posted (case-insensitive)
         chrome_path: the path to Chrome Driver on your device
+        driver: a command used to perform most scraping tasks, containing the specified Chrome Driver path
     '''
- # change to True if you don't want the browser to actually open
 
     def __init__(self, job: str, location: str, chrome_path: str):
         self.job = job
@@ -31,9 +32,10 @@ class LinkScraper:
             options=options, executable_path=(chrome_path))
 
     @staticmethod
-    def process(x: str):
+    def _process(x: str):
         '''
         This static method changes the entered string into correct format to be inserted in the url
+
         Returns:
             str: lower case string with space replaced with correct representation in url format
         '''
@@ -47,7 +49,7 @@ class LinkScraper:
 
     @job.setter
     def job(self, job):
-        self.__job = self.process(job)
+        self.__job = self._process(job)
 
     @property
     def location(self):
@@ -55,9 +57,9 @@ class LinkScraper:
 
     @location.setter
     def location(self, location):
-        self.__location = self.process(location)
+        self.__location = self._process(location)
 
-    def scroll(self):
+    def _scroll(self):
         '''
         This static method scrolls to the bottom of the Linkedin page
         Used after the search
@@ -92,7 +94,7 @@ class LinkScraper:
                 break
 
     @staticmethod
-    def remove_dup(df):
+    def _remove_dup(df):
         '''
         This static method uses the job listing title and employer name to drop duplicated listings
         and stores the unique results in a dataframe
@@ -105,9 +107,6 @@ class LinkScraper:
     def scrape(self):
         '''
         This function performs the webscrapping, also using the static methods in the same class.
-
-        Argument:
-            headless: default, True; can change to False if user wants to see real time scraping on browser
         '''
 
         url = f'https://www.linkedin.com/jobs/search/?keywords={self.job}&location={self.location}'
@@ -116,7 +115,7 @@ class LinkScraper:
 
         time.sleep(2)
 
-        self.scroll()
+        self._scroll()
 
         listings = self.driver.find_element_by_xpath(
             '//*[@id="main-content"]/section[2]/ul')  # contains all posts
@@ -141,7 +140,7 @@ class LinkScraper:
         df = pd.DataFrame(list(zip(title, employee, link)),
                           columns=['Title', 'Employee', 'Link'])
 
-        self.remove_dup(df)
+        self._remove_dup(df)
 
 
 if __name__ == '__main__':
