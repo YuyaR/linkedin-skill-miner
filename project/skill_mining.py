@@ -4,12 +4,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import fnmatch
 import matplotlib.pyplot as plt
+
 # from bs4 import BeautifulSoup
 # from bs4 import SoupStrainer
 # import requests
 # from requests_html import HTMLSession
 
-# TODO: make import-all file
 # TODO: see if can skip creating the data frame
 
 
@@ -18,8 +18,6 @@ class TextMiner:
     This class inherits the following attributes from LinkScraper:
 
     Attributes:
-        job: type of job for search (case-insensitive)
-        location: the location where the jobs are posted (case-insensitive)
         chrome_path: the path to Chrome Driver on your device
 
     It contains methods that scrape the bulletpoints from each job listing 
@@ -28,7 +26,9 @@ class TextMiner:
     The result is displayed by a barplot.
     '''
 
-    def __init__(self, chrome_path):
+    def __init__(self, job, loc, chrome_path):
+        self.job = job
+        self.loc = loc
         self.chrome_path = chrome_path
         self.DF = pd.read_csv('./job_data.csv')
 
@@ -64,6 +64,8 @@ class TextMiner:
             # main = soup.findAll('div', attrs={"class": ["jobs-box__html-content jobs-description-content__text t-14 t-normal"]})
             # texts = main.find('span')
             # print(texts.text)
+            # text = texts.get_attribute('innerHTML')
+            # bunch_texts.append(text)
 
             driver.get(url)
             try:
@@ -75,14 +77,15 @@ class TextMiner:
                     txt = tx.split('\n')
                 bullets.extend(txt)
             except:
-                bullets.append(None)
+                pass
 
-            # text = texts.get_attribute('innerHTML')
-            # bunch_texts.append(text)
+
 
         final_list = [i for i in bullets if i]  # removing empty strings
 
         print(final_list)
+
+        self.save_dataset(final_list)
 
         self._mineText(final_list)
 
@@ -114,8 +117,6 @@ class TextMiner:
             word_count = len(fnmatch.filter(words, f'{kw}*'))
             keywords[kw] = word_count
 
-    # TODO: make graph horizontal (if not wordcloud)
-
     @staticmethod
     def _plot(dic):
         '''
@@ -123,8 +124,8 @@ class TextMiner:
         '''
         skills = ['planning', 'communication', 'analysis', 'organisation', 'independence',
                   'creativity', 'collaboration', 'management', 'initiative', 'leadership']
-        plt.bar(x=skills, height=dic.values())
-        plt.title('How the Top Transferable Skills are Desired in Your Dream Job')
+        plt.barh(skills, dic.values())
+        plt.title('How Top Transferable Skills are Desired in Your Dream Job')
         plt.show()
 
 
