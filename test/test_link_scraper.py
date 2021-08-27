@@ -16,6 +16,21 @@ class LinkScraperTestCase(unittest.TestCase):
             link_scraper.LinkScraper(
                 'conservation', 'United.States', '/Users/yuyara/Downloads/chromedriver 2')
             # special character '.' not accepted
+    
+    def test_scraper(self):
+        with self.assertRaises(ValueError) as err:
+            example = link_scraper.LinkScraper(
+                'ffwenie', 'vnoegniw', '/Users/yuyara/Downloads/chromedriver 2')
+            example.scrape()
+            #most coherent words would still return results. But in case of absolute nonsense or simply
+            #extremely esoteric/unpopular jobs should it not find any jobs on Linkedin it would return 
+            #this error
+        
+    def test_driver(self):
+        with self.assertRaises(ValueError) as err:
+            example = link_scraper.LinkScraper(
+                'conservation', 'Japan', '/wrong/path/to/chromedriver')
+
 
 
 unittest.main(argv=[''], verbosity=2, exit=False)
