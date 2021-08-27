@@ -32,7 +32,7 @@ class TextMiner:
         self.chrome_path = chrome_path
         self.DF = pd.read_csv('./job_data.csv')
 
-    def getText(self, n=None):
+    def getText(self):
         '''
         This function uses selenium to scrape all bullet points from each job listing (from links)
 
@@ -43,8 +43,9 @@ class TextMiner:
             a barplot displaying the resulting count for each skill
         '''
 
-        if n == None:
-            n = len(self.DF)
+        n = len(self.DF)
+        if n > 100:
+            n = 100 #too many job listings can take too long to mine
 
         links = list(self.DF['Link'][:n])
         options = Options()
