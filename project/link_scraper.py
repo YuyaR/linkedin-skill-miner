@@ -1,8 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.common import exceptions 
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import pandas as pd
+import re
 
 '''
 This module contains a class which purpose is to scrapes all hrefs (links) to the returned hits
@@ -12,6 +14,7 @@ for a job search with a specified location on Linkedin.
 
 options = Options()
 options.headless = True
+
 
 
 class LinkScraper:
@@ -28,8 +31,12 @@ class LinkScraper:
         self.location = location
         self.chrome_path = chrome_path
 
-        self.driver = webdriver.Chrome(
-            options=options, executable_path=(chrome_path))
+        try:
+            self.driver = webdriver.Chrome(
+                options=options, executable_path=(chrome_path))
+        except exceptions.WebDriverException:
+            raise ValueError("path to chrome driver not correct. Please try select the right executable")
+        self.action = ActionChains(self.driver)
 
     @staticmethod
     def _process(x: str):
@@ -49,7 +56,10 @@ class LinkScraper:
 
     @job.setter
     def job(self, job):
-        self.__job = self._process(job)
+        if re.fullmatch('[a-zA-Z\s]+', job): #checks if it's only alphabetical letters with spaces
+            self.__job = self._process(job)
+        else:
+            raise ValueError('Not a valid job title')
 
     @property
     def location(self):
@@ -57,7 +67,10 @@ class LinkScraper:
 
     @location.setter
     def location(self, location):
-        self.__location = self._process(location)
+        if re.fullmatch('[a-zA-Z\s]+', location):
+            self.__location = self._process(location)
+        else:
+            raise ValueError('Not a valid location')
 
     def _scroll(self):
         '''
@@ -80,7 +93,7 @@ class LinkScraper:
                 button = self.driver.find_element_by_xpath(
                     '//*[@id="main-content"]/section[2]/button')
                 # clicks button for more to scroll
-                action.move_to_element(button).click().perform()
+                self.action.move_to_element(button).click().perform()
             except:
                 break
 
@@ -106,7 +119,7 @@ class LinkScraper:
 
     def scrape(self):
         '''
-        This function performs the webscrapping, also using the static methods in the same class.
+        This function performs the webscrapping, using the static methods above.
         '''
 
         url = f'https://www.linkedin.com/jobs/search/?keywords={self.job}&location={self.location}'
@@ -117,8 +130,12 @@ class LinkScraper:
 
         self._scroll()
 
-        listings = self.driver.find_element_by_xpath(
-            '//*[@id="main-content"]/section[2]/ul')  # contains all posts
+        try:
+            listings = self.driver.find_element_by_xpath(
+                '//*[@id="main-content"]/section[2]/ul')  # contains all posts
+        except exceptions.NoSuchElementException as exception:
+            raise ValueError("Can't find any jobs on Linkedin under the speficied condition")
+
         posts = listings.find_elements_by_xpath(
             './/*[@class="base-card__full-link"]')  # contains hyperlink
         len(posts)
@@ -145,5 +162,5 @@ class LinkScraper:
 
 if __name__ == '__main__':
     sc = LinkScraper('conservation', 'Japan',
-                     '/Users/yuyara/Downloads/chromedriver 2')
+                     '/Users/yuyara/Downloads/chromedriv')
     sc.scrape()
