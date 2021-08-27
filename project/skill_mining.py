@@ -10,8 +10,6 @@ import matplotlib.pyplot as plt
 # import requests
 # from requests_html import HTMLSession
 
-# TODO: see if can skip creating the data frame
-
 
 class TextMiner:
     '''
@@ -45,7 +43,7 @@ class TextMiner:
 
         n = len(self.DF)
         if n > 100:
-            n = 100 #too many job listings can take too long to mine
+            n = 100  # too many job listings can take too long to mine
 
         links = list(self.DF['Link'][:n])
         options = Options()
@@ -79,13 +77,9 @@ class TextMiner:
             except:
                 pass
 
-
-
         final_list = [i for i in bullets if i]  # removing empty strings
 
         print(final_list)
-
-        self.save_dataset(final_list)
 
         self._mineText(final_list)
 
