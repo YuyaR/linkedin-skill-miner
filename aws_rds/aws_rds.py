@@ -19,8 +19,3 @@ class AwsSQL:
     def read_table(self, tbl):
         self.engine.execute(f'''SELECT * FROM {tbl}
             LIMIT 20''').fetchall()
-
-
-
-    
-    df.to_sql(f'{self.job}{self.loc}_skills', engine, if_exists='replace')
