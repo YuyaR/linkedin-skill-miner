@@ -1,7 +1,7 @@
-from window import MainWindow
+from project import window
 import tkinter as tk
 
 
 root = tk.Tk()
-window = MainWindow(root)
+window = window.MainWindow(root)
 root.mainloop()

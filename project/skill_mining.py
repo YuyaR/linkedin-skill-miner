@@ -1,5 +1,4 @@
 import pandas as pd
-from link_scraper import LinkScraper
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import fnmatch
@@ -111,19 +110,20 @@ class TextMiner:
             word_count = len(fnmatch.filter(words, f'{kw}*'))
             keywords[kw] = word_count
 
-    @staticmethod
-    def _plot(dic):
+    def _plot(self, dic):
         '''
         a static method visualising the frequency of occurrence of each skill in a barplot.
         '''
         skills = ['planning', 'communication', 'analysis', 'organisation', 'independence',
                   'creativity', 'collaboration', 'management', 'initiative', 'leadership']
         plt.barh(skills, dic.values())
-        plt.title('How Top Transferable Skills are Desired in Your Dream Job')
+        plt.title(
+            f'How Top Transferable Skills are Desired in {self.job} in {self.loc}')
         plt.show()
 
 
 if __name__ == '__main__':
-    m = TextMiner('/Users/yuyara/Downloads/chromedriver 2')
+    m = TextMiner('web developer', 'Manchester',
+                  '/Users/yuyara/Downloads/chromedriver 2')
     m.getText()
     print(keywords)

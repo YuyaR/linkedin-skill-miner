@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
-from link_scraper import LinkScraper
-from skill_mining import TextMiner
+from project.link_scraper import LinkScraper
+from project.skill_mining import TextMiner
 
 
 class MainWindow(tk.Frame):
@@ -44,7 +44,7 @@ class MainWindow(tk.Frame):
 
         self.progresstext.insert('end', 'almost there...')
 
-        task2 = TextMiner(chp)
+        task2 = TextMiner(job, loc, chp)
         task2.getText()  # return a barplot of frequency of occurrence for each key skill
 
         self.progress.stop()

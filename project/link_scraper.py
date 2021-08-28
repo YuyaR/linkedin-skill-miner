@@ -11,9 +11,10 @@ This module contains a class which purpose is to scrapes all hrefs (links) to th
 for a job search with a specified location on Linkedin.
 '''
 
+#FIXME: can't locate elements with developer London.
 
 options = Options()
-options.headless = True
+options.headless = False
 
 
 
@@ -35,7 +36,7 @@ class LinkScraper:
             self.driver = webdriver.Chrome(
                 options=options, executable_path=(chrome_path))
         except exceptions.WebDriverException:
-            raise ValueError("path to chrome driver not correct. Please try select the right executable")
+            raise ValueError("path to chrome driver not correct. Please select the right executable")
         self.action = ActionChains(self.driver)
 
     @staticmethod
