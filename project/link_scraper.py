@@ -1,21 +1,19 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.common import exceptions 
+from selenium.common import exceptions
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import pandas as pd
 import re
+import sys
 
 '''
 This module contains a class which purpose is to scrapes all hrefs (links) to the returned hits
 for a job search with a specified location on Linkedin.
 '''
 
-#FIXME: can't locate elements with developer London.
-
 options = Options()
 options.headless = False
-
 
 
 class LinkScraper:
@@ -36,7 +34,10 @@ class LinkScraper:
             self.driver = webdriver.Chrome(
                 options=options, executable_path=(chrome_path))
         except exceptions.WebDriverException:
-            raise ValueError("path to chrome driver not correct. Please select the right executable")
+            sys.stderr.write(
+                "path to chrome driver not correct. Please select the right executable")
+            raise ValueError(
+                "path to chrome driver not correct. Please select the right executable")
         self.action = ActionChains(self.driver)
 
     @staticmethod
@@ -57,9 +58,11 @@ class LinkScraper:
 
     @job.setter
     def job(self, job):
-        if re.fullmatch('[a-zA-Z\s]+', job): #checks if it's only alphabetical letters with spaces
+        # checks if it's only alphabetical letters with spaces
+        if re.fullmatch('[a-zA-Z\s]+', job):
             self.__job = self._process(job)
         else:
+            sys.stderr.write('Not a valid job title')
             raise ValueError('Not a valid job title')
 
     @property
@@ -71,6 +74,7 @@ class LinkScraper:
         if re.fullmatch('[a-zA-Z\s]+', location):
             self.__location = self._process(location)
         else:
+            sys.stderr.write('Not a valid location')
             raise ValueError('Not a valid location')
 
     def _scroll(self):
@@ -135,7 +139,10 @@ class LinkScraper:
             listings = self.driver.find_element_by_xpath(
                 '//*[@id="main-content"]/section[2]/ul')  # contains all posts
         except exceptions.NoSuchElementException as exception:
-            raise ValueError("Can't find any jobs on Linkedin under the speficied condition")
+            sys.stderr.write(
+                "Can't find any jobs on Linkedin under the speficied condition")
+            raise ValueError(
+                "Can't find any jobs on Linkedin under the speficied condition")
 
         posts = listings.find_elements_by_xpath(
             './/*[@class="base-card__full-link"]')  # contains hyperlink

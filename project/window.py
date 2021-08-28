@@ -3,10 +3,10 @@ from tkinter import ttk
 from tkinter import filedialog as fd
 from project.link_scraper import LinkScraper
 from project.skill_mining import TextMiner
+import sys
 
 
 class MainWindow(tk.Frame):
-
 
     '''
     This class creates a tkinter window that allows users to search for a job title and location on Linkedin
@@ -31,21 +31,20 @@ class MainWindow(tk.Frame):
         description texts for the search, and generates a plot at the end for display of result.
         '''
         self.progress.start()
-        self.progresstext.insert('end', 'job started...')
+        self.progresstext.insert(tk.END, 'job started...')
 
         job = self.jobbar.get()
         loc = self.locbar.get()
         chp = self.pathbar.get()
 
         task = LinkScraper(job, loc, chp)
-        task.scrape()  # stores finding in a dataframe in the current directory
-
         self.progresstext.insert('end', 'busy getting all them jobs...')
+        task.scrape()  # stores finding in a dataframe in the current directory
 
         self.progresstext.insert('end', 'almost there...')
 
         task2 = TextMiner(job, loc, chp)
-        task2.getText()  # return a barplot of frequency of occurrence for each key skill
+        task2.getText()  # returns a barplot of frequency of occurrence for each key skill
 
         self.progress.stop()
 
@@ -83,6 +82,9 @@ class MainWindow(tk.Frame):
 
         self.progresstext = tk.Text(self.root, height=1, width=60)
         self.progresstext.grid(row=9, column=0)
+        # redirect system error msg to the tkinter text box
+        sys.stderr = StderrPrint(self.progresstext)
+
         self.progress = ttk.Progressbar(self.root, orient='horizontal',
                                         mode='indeterminate', length=400)
         self.progress.grid(row=10, column=0)
@@ -98,6 +100,25 @@ class MainWindow(tk.Frame):
         self.root.config(bg='RoyalBlue1')
 
         self.Layout()
+
+
+class StderrPrint:
+    '''
+    This class prints the standard error output in the text box on the main window
+    Attributes:
+        text_widget: the text box to show the error msgs
+    '''
+
+    def __init__(self, text_widget):
+        self.text_widget = text_widget
+
+    def write(self, errmsg):
+        '''
+        this function whenever called will clear the textbox first then print the msg
+        Arg:
+            errmsg: the msg to be printed; in this case stderr msgs
+        '''
+        self.text_widget.insert('1.0', errmsg)
 
 
 if __name__ == '__main__':

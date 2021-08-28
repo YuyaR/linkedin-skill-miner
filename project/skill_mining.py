@@ -78,8 +78,6 @@ class TextMiner:
 
         final_list = [i for i in bullets if i]  # removing empty strings
 
-        print(final_list)
-
         self._mineText(final_list)
 
         self._plot(keywords)
@@ -93,6 +91,8 @@ class TextMiner:
             a dictionary with the skill and its number of occurrence
         '''
         words = []
+        if final_list == []:
+            pass
         for s in final_list:
             sentence = s.split(' ')
             sentence = [i.lower() for i in sentence]
