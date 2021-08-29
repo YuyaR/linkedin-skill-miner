@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='careerskills',
-    version='0.0.2',
+    version='0.0.3',
     description='A graphic user interface that allows you to find out the top desired transferable skills in your dream career',
     url='https://github.com/YuyaR/linkedin-skill-miner.git',
     author='Yuya Ra',

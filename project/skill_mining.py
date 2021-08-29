@@ -1,13 +1,9 @@
+from sys import stderr
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import fnmatch
 import matplotlib.pyplot as plt
-
-# from bs4 import BeautifulSoup
-# from bs4 import SoupStrainer
-# import requests
-# from requests_html import HTMLSession
 
 
 class TextMiner:
@@ -52,18 +48,6 @@ class TextMiner:
 
         bullets = []
         for url in links:
-            # session = HTMLSession()
-            # r = session.get(url)
-            # soup = BeautifulSoup(r.content, 'html.parser')
-
-            # main = soup.find_all(id="job-details")
-            # main = soup.find('div', attrs = {"id":["careers"]})
-            # main = soup.findAll('div', attrs={"class": ["jobs-box__html-content jobs-description-content__text t-14 t-normal"]})
-            # texts = main.find('span')
-            # print(texts.text)
-            # text = texts.get_attribute('innerHTML')
-            # bunch_texts.append(text)
-
             driver.get(url)
             try:
                 main = driver.find_element_by_xpath(
@@ -74,13 +58,14 @@ class TextMiner:
                     txt = tx.split('\n')
                 bullets.extend(txt)
             except:
+                # if no bullet points found, move on to next listing
                 pass
 
         final_list = [i for i in bullets if i]  # removing empty strings
 
         self._mineText(final_list)
 
-        self._plot(keywords)
+        self.plot(keywords)
 
     def _mineText(self, final_list):
         '''
@@ -92,7 +77,8 @@ class TextMiner:
         '''
         words = []
         if final_list == []:
-            pass
+            stderr.write("Sorry, no useful ")
+            return
         for s in final_list:
             sentence = s.split(' ')
             sentence = [i.lower() for i in sentence]
@@ -100,7 +86,7 @@ class TextMiner:
             words.extend(sentence)
 
         global keywords
-
+        # can be changed by the user for any skills to be matched
         keywords = {'plan': None, 'communicat': None, 'analy': None, 'organi': None,
                     'independen': None, 'creativ': None, 'collabor': None, 'manage': None,
                     'initiat': None, 'lead': None}
@@ -110,12 +96,14 @@ class TextMiner:
             word_count = len(fnmatch.filter(words, f'{kw}*'))
             keywords[kw] = word_count
 
-    def _plot(self, dic):
+    def plot(self, dic):
         '''
-        a static method visualising the frequency of occurrence of each skill in a barplot.
+        a method visualising the frequency of occurrence of each skill in a barplot.
         '''
+        # skills are just for labelling the barplot with full words
         skills = ['planning', 'communication', 'analysis', 'organisation', 'independence',
                   'creativity', 'collaboration', 'management', 'initiative', 'leadership']
+        # horizontal plot so plot labels don't overlap
         plt.barh(skills, dic.values())
         plt.title(
             f'How Top Transferable Skills are Desired in {self.job} in {self.loc}')

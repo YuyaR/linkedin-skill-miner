@@ -13,7 +13,7 @@ for a job search with a specified location on Linkedin.
 '''
 
 options = Options()
-options.headless = False
+options.headless = True
 
 
 class LinkScraper:
