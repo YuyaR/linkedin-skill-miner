@@ -67,7 +67,8 @@ class TextMiner:
 
         self.plot(keywords)
 
-    def _mineText(self, final_list):
+    @staticmethod
+    def _mineText(final_list):
         '''
         This method counts how many times each of the skill keyword in the keywords dictionary
         is found in the scraped bullet points
