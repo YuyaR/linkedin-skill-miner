@@ -13,7 +13,7 @@ for a job search with a specified location on Linkedin.
 '''
 
 options = Options()
-options.headless = True
+options.headless = False
 
 
 class LinkScraper:
@@ -79,7 +79,7 @@ class LinkScraper:
 
     def _scroll(self):
         '''
-        This static method scrolls to the bottom of the Linkedin page
+        This method scrolls to the bottom of the Linkedin page
         Used after the search
         '''
 
@@ -100,11 +100,12 @@ class LinkScraper:
                 # clicks button for more to scroll
                 self.action.move_to_element(button).click().perform()
             except:
+                #scrolling may be terminated due to not interactable or stale element
                 break
 
-            time.sleep(0.5)
+            time.sleep(1)
             self.driver.execute_script(f'window.scrollTo(50, {latestH}+{500})')
-            time.sleep(0.5)
+            time.sleep(1)
             latestH = self.driver.execute_script(
                 'return document.body.scrollHeight')
 
@@ -164,11 +165,11 @@ class LinkScraper:
 
         df = pd.DataFrame(list(zip(title, employee, link)),
                           columns=['Title', 'Employee', 'Link'])
-
+        print(len(link))
         self._remove_dup(df)
 
 
 if __name__ == '__main__':
-    sc = LinkScraper('conservation', 'Japan',
-                     '/Users/yuyara/Downloads/chromedriv')
+    sc = LinkScraper('web developer', 'manchester',
+                     '/Users/yuyara/Downloads/chromedriver 2')
     sc.scrape()

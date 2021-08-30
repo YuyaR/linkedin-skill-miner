@@ -2,6 +2,7 @@ from sys import stderr
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.common import exceptions
 import fnmatch
 import matplotlib.pyplot as plt
 
@@ -49,17 +50,13 @@ class TextMiner:
         bullets = []
         for url in links:
             driver.get(url)
-            try:
-                main = driver.find_element_by_xpath(
-                    "//*[@class = 'show-more-less-html__markup show-more-less-html__markup--clamp-after-5']")
-                bp = main.find_elements_by_xpath('.//ul')
-                for n in bp:
-                    tx = n.get_attribute('innerText')
-                    txt = tx.split('\n')
-                bullets.extend(txt)
-            except:
-                # if no bullet points found, move on to next listing
-                pass
+            main = driver.find_element_by_xpath(
+                "//*[@class = 'show-more-less-html__markup show-more-less-html__markup--clamp-after-5']")
+            bp = main.find_elements_by_xpath('.//ul')
+            for n in bp:
+                tx = n.get_attribute('innerText')
+                txt = tx.split('\n')
+            bullets.extend(txt)
 
         final_list = [i for i in bullets if i]  # removing empty strings
 
@@ -92,10 +89,10 @@ class TextMiner:
                     'independen': None, 'creativ': None, 'collabor': None, 'manage': None,
                     'initiat': None, 'lead': None}
 
-        for kw in keywords.keys():
+        for key in keywords:
             # allow wildcard matching of words with specified beginning
-            word_count = len(fnmatch.filter(words, f'{kw}*'))
-            keywords[kw] = word_count
+            word_count = len(fnmatch.filter(words, f'{key}*'))
+            keywords[key] = word_count
 
     def plot(self, dic):
         '''
