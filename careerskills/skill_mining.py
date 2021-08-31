@@ -50,13 +50,16 @@ class TextMiner:
         bullets = []
         for url in links:
             driver.get(url)
-            main = driver.find_element_by_xpath(
-                "//*[@class = 'show-more-less-html__markup show-more-less-html__markup--clamp-after-5']")
-            bp = main.find_elements_by_xpath('.//ul')
-            for n in bp:
-                tx = n.get_attribute('innerText')
-                txt = tx.split('\n')
-            bullets.extend(txt)
+            try:
+                main = driver.find_element_by_xpath(
+                    "//*[@class = 'show-more-less-html__markup show-more-less-html__markup--clamp-after-5']")
+                bp = main.find_elements_by_xpath('.//ul')
+                for n in bp:
+                    tx = n.get_attribute('innerText')
+                    txt = tx.split('\n')
+                bullets.extend(txt)
+            except: # in case the link/job is no longer valid
+                pass
 
         final_list = [i for i in bullets if i]  # removing empty strings
 
