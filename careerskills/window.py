@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
-from project.link_scraper import LinkScraper
-from project.skill_mining import TextMiner
+from careerskills.link_scraper import LinkScraper
+from careerskills.skill_mining import TextMiner
 import sys
 
 

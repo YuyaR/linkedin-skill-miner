@@ -1,4 +1,4 @@
-from project import window
+from careerskills import window
 import tkinter as tk
 
 
