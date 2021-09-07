@@ -98,7 +98,7 @@ class LinkScraper:
                 button = self.driver.find_element_by_xpath(
                     '//*[@id="main-content"]/section[2]/button')
                 # clicks button for more to scroll
-                self.action.move_to_element(button).click().perform()
+                button.click()
             except:
                 #scrolling may be terminated due to not interactable or stale element
                 break
