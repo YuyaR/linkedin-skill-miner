@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import filedialog as fd
 from careerskills.link_scraper import LinkScraper
 from careerskills.skill_mining import TextMiner
+from aws_rds.aws_rds import AwsSQL
 import sys
 
 
@@ -48,6 +49,11 @@ class MainWindow(tk.Frame):
 
         self.progress.stop()
 
+    def save(self, df):
+        if self.var1.get()==1:
+            server = AwsSQL()
+            server.save_dataset(df)
+
     def Layout(self):
         '''
         This function creates the layout of the tkinter window
@@ -79,6 +85,9 @@ class MainWindow(tk.Frame):
 
         browsebt = tk.Button(self.root, text='browse', command=self.browse)
         browsebt.grid(row=7, column=0, sticky='e')
+
+        save_check = tk.Checkbutton(self.root, text='save the dataset', variable=self.var1, onvalue=1, offvalue=0, command=self.save)
+        save_check.grid(row=8, column=0, sticky='e')
 
         self.progresstext = tk.Text(self.root, height=1, width=60)
         self.progresstext.grid(row=9, column=0)
