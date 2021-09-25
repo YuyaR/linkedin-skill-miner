@@ -3,7 +3,6 @@ from tkinter import ttk
 from tkinter import filedialog as fd
 from careerskills.link_scraper import LinkScraper
 from careerskills.skill_mining import TextMiner
-from aws_rds.aws_rds import AwsSQL
 import sys
 
 
@@ -37,6 +36,7 @@ class MainWindow(tk.Frame):
         job = self.jobbar.get()
         loc = self.locbar.get()
         chp = self.pathbar.get()
+        save = self.checkbox.get()
 
         task = LinkScraper(job, loc, chp)
         self.progresstext.insert('end', 'busy getting all them jobs...')
@@ -44,15 +44,10 @@ class MainWindow(tk.Frame):
 
         self.progresstext.insert('end', 'almost there...')
 
-        task2 = TextMiner(job, loc, chp)
+        task2 = TextMiner(job, loc, chp, save)
         task2.getText()  # returns a barplot of frequency of occurrence for each key skill
 
         self.progress.stop()
-
-    def save(self, df):
-        if self.var1.get()==1:
-            server = AwsSQL()
-            server.save_dataset(df)
 
     def Layout(self):
         '''
@@ -86,7 +81,8 @@ class MainWindow(tk.Frame):
         browsebt = tk.Button(self.root, text='browse', command=self.browse)
         browsebt.grid(row=7, column=0, sticky='e')
 
-        save_check = tk.Checkbutton(self.root, text='save the dataset', variable=self.var1, onvalue=1, offvalue=0, command=self.save)
+        self.checkbox = tk.IntVar()
+        save_check = tk.Checkbutton(self.root, text='save the dataset', variable=self.checkbox, onvalue=1, offvalue=0)
         save_check.grid(row=8, column=0, sticky='e')
 
         self.progresstext = tk.Text(self.root, height=1, width=60)

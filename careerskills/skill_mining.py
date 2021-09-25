@@ -5,14 +5,16 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common import exceptions
 import fnmatch
 import matplotlib.pyplot as plt
+from aws_rds.aws_rds import AwsSQL
 
 
 class TextMiner:
     '''
-    This class inherits the following attributes from LinkScraper:
-
     Attributes:
+        job: job position to be searched
+        loc: location of the job to be searched
         chrome_path: the path to Chrome Driver on your device
+        save_df: a boolean if true will save the outcome into a dataframe to be stored in AWS RDS; default false (0)
 
     It contains methods that scrape the bulletpoints from each job listing 
     collected from Linkedin, then count the number of occurrence for ten
@@ -20,10 +22,11 @@ class TextMiner:
     The result is displayed by a barplot.
     '''
 
-    def __init__(self, job, loc, chrome_path):
+    def __init__(self, job, loc, chrome_path, save_df = 0):
         self.job = job
         self.loc = loc
         self.chrome_path = chrome_path
+        self.save_df = save_df
         self.DF = pd.read_csv('./job_data.csv')
 
     def getText(self):
@@ -63,12 +66,11 @@ class TextMiner:
 
         final_list = [i for i in bullets if i]  # removing empty strings
 
-        self._mineText(final_list)
+        self.mineText(final_list)
 
         self.plot(keywords)
 
-    @staticmethod
-    def _mineText(final_list):
+    def mineText(self, final_list):
         '''
         This method counts how many times each of the skill keyword in the keywords dictionary
         is found in the scraped bullet points
@@ -97,6 +99,9 @@ class TextMiner:
             word_count = len(fnmatch.filter(words, f'{key}*'))
             keywords[key] = word_count
 
+        if self.save_df == 1:
+            self.save(keywords)
+
     def plot(self, dic):
         '''
         a method visualising the frequency of occurrence of each skill in a barplot.
@@ -110,6 +115,10 @@ class TextMiner:
             f'How Top Transferable Skills are Desired in {self.job} in {self.loc}')
         plt.show()
 
+    def save(self, dic):
+        df = pd.DataFrame.from_dict(dic)
+        server = AwsSQL()
+        server.save_dataset(df)
 
 if __name__ == '__main__':
     m = TextMiner('web developer', 'Manchester',
