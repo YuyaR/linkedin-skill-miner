@@ -1,4 +1,4 @@
-from careerskills import window
+import window
 import tkinter as tk
 
 

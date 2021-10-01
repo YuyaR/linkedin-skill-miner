@@ -5,7 +5,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common import exceptions
 import fnmatch
 import matplotlib.pyplot as plt
-from aws_rds.aws_rds import AwsSQL
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+# from aws_rds.aws_rds import AwsSQL
 
 
 class TextMiner:
@@ -47,8 +48,9 @@ class TextMiner:
         links = list(self.DF['Link'][:n])
         options = Options()
         options.headless = True
-        driver = webdriver.Chrome(
-            options=options, executable_path=self.chrome_path)
+        # driver = webdriver.Chrome(
+        #     options=options, executable_path=self.chrome_path)
+        driver = webdriver.Remote('http://172.17.0.2:4444', DesiredCapabilities.CHROME)
 
         bullets = []
         for url in links:
@@ -99,8 +101,8 @@ class TextMiner:
             word_count = len(fnmatch.filter(words, f'{key}*'))
             keywords[key] = word_count
 
-        if self.save_df == 1:
-            self.save(keywords)
+        # if self.save_df == 1:
+        #     self.save(keywords)
 
     def plot(self, dic):
         '''
@@ -115,10 +117,10 @@ class TextMiner:
             f'How Top Transferable Skills are Desired in {self.job} in {self.loc}')
         plt.show()
 
-    def save(self, dic):
-        df = pd.DataFrame.from_dict(dic)
-        server = AwsSQL()
-        server.save_dataset(df)
+    # def save(self, dic):
+    #     df = pd.DataFrame.from_dict(dic)
+    #     server = AwsSQL()
+    #     server.save_dataset(df)
 
 if __name__ == '__main__':
     m = TextMiner('web developer', 'Manchester',

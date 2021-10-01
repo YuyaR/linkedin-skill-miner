@@ -14,7 +14,7 @@ class AwsSQL:
         self.engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
 
     def save_dataset(self, df):
-        df.to_sql(f'{self.job}{self.loc}_skills', self.engine, if_exists='replace')
+        df.to_sql(f"{self.job}{self.loc}_skills", self.engine, if_exists='replace')
 
     def read_table(self, tbl):
         self.engine.execute(f'''SELECT * FROM {tbl}

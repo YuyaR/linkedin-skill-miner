@@ -7,6 +7,8 @@ import pandas as pd
 import re
 import sys
 
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 '''
 This module contains a class which purpose is to scrapes all hrefs (links) to the returned hits
 for a job search with a specified location on Linkedin.
@@ -31,8 +33,9 @@ class LinkScraper:
         self.chrome_path = chrome_path
 
         try:
-            self.driver = webdriver.Chrome(
-                options=options, executable_path=(chrome_path))
+            self.driver = webdriver.Remote("http://172.17.0.2:4444", DesiredCapabilities.CHROME)
+            # self.driver = webdriver.Chrome(
+            #     options=options, executable_path=(chrome_path))
         except exceptions.WebDriverException:
             sys.stderr.write(
                 "path to chrome driver not correct. Please select the right executable")
@@ -170,6 +173,8 @@ class LinkScraper:
 
 
 if __name__ == '__main__':
-    sc = LinkScraper('web developer', 'manchester',
-                     '/Users/yuyara/Downloads/chromedriver 2')
+    job = input("Title of job you want to search: ")
+    location = input('Location: ')
+    chrome_path = input('Absolute path to your Chrome driver: ')
+    sc = LinkScraper(job, location, chrome_path)
     sc.scrape()
