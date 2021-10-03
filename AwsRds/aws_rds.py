@@ -21,3 +21,8 @@ class AwsSQL:
     def read_table(self, tbl):
         self.engine.execute(f'''SELECT * FROM {tbl}
             LIMIT 20''').fetchall()
+
+
+if __name__ == '__main__':
+    db = AwsSQL('test', 'testloc')
+    db.engine.connect()

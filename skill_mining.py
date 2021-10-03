@@ -52,9 +52,9 @@ class TextMiner:
         links = list(self.DF['Link'][:n])
         options = Options()
         options.headless = True
-        driver = webdriver.Chrome(
-            options=options, executable_path=self.chrome_path)
-        # driver = webdriver.Remote("http://172.17.0.2:4444", DesiredCapabilities.CHROME)
+        # driver = webdriver.Chrome(
+        #     options=options, executable_path=self.chrome_path)
+        driver = webdriver.Remote("http://172.17.0.2:4444", DesiredCapabilities.CHROME)
 
         bullets = []
         for url in links:
