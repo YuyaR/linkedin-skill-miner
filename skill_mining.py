@@ -121,15 +121,16 @@ class TextMiner:
         plt.show()
 
     def save(self, dic):
-        df = pd.DataFrame.from_dict(dic)
+        df = pd.DataFrame.from_dict(dic, orient='index', columns=['count'])
         print(df)
-        server = AwsSQL()
+        server = AwsSQL(self.job, self.loc)
         server.save_dataset(df)
 
 if __name__ == '__main__':
     m = TextMiner('web developer', 'Manchester',
                   '/Users/yuyara/Downloads/chromedriver 3', True)
-    m.getText()
+    # m.getText()
+    print(m.keywords)
     m.save(m.keywords)
-    # print(keywords)
+
     

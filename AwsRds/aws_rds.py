@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 
 class AwsSQL:
-    def __init__(self):
+    def __init__(self, job, loc):
         DATABASE_TYPE = 'postgresql'
         DBAPI = 'psycopg2'
         ENDPOINT = 'career-skills.c6a6xhdjmptr.ap-northeast-1.rds.amazonaws.com'
@@ -12,6 +12,8 @@ class AwsSQL:
         DATABASE = 'postgres'
 
         self.engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
+        self.job = job
+        self.loc = loc
 
     def save_dataset(self, df):
         df.to_sql(f"{self.job}{self.loc}_skills", self.engine, if_exists='replace')
