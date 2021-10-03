@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
-from careerskills.link_scraper import LinkScraper
-from careerskills.skill_mining import TextMiner
+from link_scraper import LinkScraper
+from skill_mining import TextMiner
 import sys
 
 
@@ -30,8 +30,6 @@ class MainWindow(tk.Frame):
         and clicks 'start mining' button. It gathers these inputs and scrapes Linkedin for the links and job
         description texts for the search, and generates a plot at the end for display of result.
         '''
-        self.progress.start()
-        self.progresstext.insert(tk.END, 'job started...')
 
         job = self.jobbar.get()
         loc = self.locbar.get()
@@ -39,15 +37,10 @@ class MainWindow(tk.Frame):
         save = self.checkbox.get()
 
         task = LinkScraper(job, loc, chp)
-        self.progresstext.insert('end', 'busy getting all them jobs...')
         task.scrape()  # stores finding in a dataframe in the current directory
-
-        self.progresstext.insert('end', 'almost there...')
 
         task2 = TextMiner(job, loc, chp, save)
         task2.getText()  # returns a barplot of frequency of occurrence for each key skill
-
-        self.progress.stop()
 
     def Layout(self):
         '''
@@ -82,17 +75,13 @@ class MainWindow(tk.Frame):
         browsebt.grid(row=7, column=0, sticky='e')
 
         self.checkbox = tk.IntVar()
-        save_check = tk.Checkbutton(self.root, text='save the dataset', variable=self.checkbox, onvalue=1, offvalue=0)
+        save_check = tk.Checkbutton(self.root, text='save the dataset', variable=self.checkbox, onvalue=True, offvalue=False)
         save_check.grid(row=8, column=0, sticky='e')
 
         self.progresstext = tk.Text(self.root, height=1, width=60)
         self.progresstext.grid(row=9, column=0)
         # redirect system error msg to the tkinter text box
         sys.stderr = StderrPrint(self.progresstext)
-
-        self.progress = ttk.Progressbar(self.root, orient='horizontal',
-                                        mode='indeterminate', length=400)
-        self.progress.grid(row=10, column=0)
 
         runbutton = tk.Button(self.root, text='Start mining', command=self.run)
         runbutton.grid(row=11, column=0, sticky='e')

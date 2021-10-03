@@ -33,9 +33,9 @@ class LinkScraper:
         self.chrome_path = chrome_path
 
         try:
-            self.driver = webdriver.Remote("http://172.17.0.2:4444", DesiredCapabilities.CHROME)
-            # self.driver = webdriver.Chrome(
-            #     options=options, executable_path=(chrome_path))
+            # self.driver = webdriver.Remote("http://172.17.0.2:4444", DesiredCapabilities.CHROME)
+            self.driver = webdriver.Chrome(
+                options=options, executable_path=(chrome_path))
         except exceptions.WebDriverException:
             raise ValueError(
                 "path to chrome driver not correct. Please select the right executable")
