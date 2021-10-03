@@ -12,8 +12,8 @@ class AwsSQL:
         DATABASE = 'postgres'
 
         self.engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
-        self.job = job
-        self.loc = loc
+        self.job = job.replace(' ', '').capitalize()
+        self.loc = loc.replace(' ', '').capitalize()
 
     def save_dataset(self, df):
         df.to_sql(f"{self.job}{self.loc}_skills", self.engine, if_exists='replace')

@@ -46,8 +46,8 @@ class TextMiner:
         '''
 
         n = len(self.DF)
-        if n > 100:
-            n = 100  # too many job listings can take too long to mine
+        # if n > 100:
+        #     n = 100  # too many job listings can take too long to mine
 
         links = list(self.DF['Link'][:n])
         options = Options()
