@@ -6,7 +6,7 @@ from selenium.common import exceptions
 import fnmatch
 import matplotlib.pyplot as plt
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-# from aws_rds.aws_rds import AwsSQL
+from AwsRds.aws_rds import AwsSQL
 
 
 class TextMiner:
@@ -16,6 +16,7 @@ class TextMiner:
         loc: location of the job to be searched
         chrome_path: the path to Chrome Driver on your device
         save_df: a boolean if true will save the outcome into a dataframe to be stored in AWS RDS; default false (0)
+        keywords: a list of keywords to be searched in the job description hits; best results with shorter words
 
     It contains methods that scrape the bulletpoints from each job listing 
     collected from Linkedin, then count the number of occurrence for ten
@@ -23,11 +24,14 @@ class TextMiner:
     The result is displayed by a barplot.
     '''
 
-    def __init__(self, job, loc, chrome_path, save_df = 0):
+    default_kw = ['plan', 'communicat', 'analy', 'organi', 'independen', 'creativ', 'collabor', 'manage', 'initia', 'lead']
+
+    def __init__(self, job, loc, chrome_path, save_df = False, keyword_list = default_kw):
         self.job = job
         self.loc = loc
         self.chrome_path = chrome_path
         self.save_df = save_df
+        self.keywords = {kw : None for kw in keyword_list}
         self.DF = pd.read_csv('./job_data.csv')
 
     def getText(self):
@@ -48,9 +52,9 @@ class TextMiner:
         links = list(self.DF['Link'][:n])
         options = Options()
         options.headless = True
-        # driver = webdriver.Chrome(
-        #     options=options, executable_path=self.chrome_path)
-        driver = webdriver.Remote('http://172.17.0.2:4444', DesiredCapabilities.CHROME)
+        driver = webdriver.Chrome(
+            options=options, executable_path=self.chrome_path)
+        # driver = webdriver.Remote("http://172.17.0.2:4444", DesiredCapabilities.CHROME)
 
         bullets = []
         for url in links:
@@ -70,7 +74,9 @@ class TextMiner:
 
         self.mineText(final_list)
 
-        self.plot(keywords)
+        print(self.keywords)
+
+        self.plot(self.keywords)
 
     def mineText(self, final_list):
         '''
@@ -82,7 +88,7 @@ class TextMiner:
         '''
         words = []
         if final_list == []:
-            stderr.write("Sorry, no useful ")
+            stderr.write("Sorry, too little jobs in this location :(")
             return
         for s in final_list:
             sentence = s.split(' ')
@@ -90,19 +96,16 @@ class TextMiner:
             # collects individual lowercased words from scraped bulletpoint texts
             words.extend(sentence)
 
-        global keywords
         # can be changed by the user for any skills to be matched
-        keywords = {'plan': None, 'communicat': None, 'analy': None, 'organi': None,
-                    'independen': None, 'creativ': None, 'collabor': None, 'manage': None,
-                    'initiat': None, 'lead': None}
 
-        for key in keywords:
+        for key in self.keywords:
             # allow wildcard matching of words with specified beginning
             word_count = len(fnmatch.filter(words, f'{key}*'))
-            keywords[key] = word_count
+            self.keywords[key] = word_count
+        
 
-        # if self.save_df == 1:
-        #     self.save(keywords)
+        if self.save_df == True:
+            self.save(self.keywords)
 
     def plot(self, dic):
         '''
@@ -117,13 +120,16 @@ class TextMiner:
             f'How Top Transferable Skills are Desired in {self.job} in {self.loc}')
         plt.show()
 
-    # def save(self, dic):
-    #     df = pd.DataFrame.from_dict(dic)
-    #     server = AwsSQL()
-    #     server.save_dataset(df)
+    def save(self, dic):
+        df = pd.DataFrame.from_dict(dic)
+        print(df)
+        server = AwsSQL()
+        server.save_dataset(df)
 
 if __name__ == '__main__':
     m = TextMiner('web developer', 'Manchester',
-                  '/Users/yuyara/Downloads/chromedriver 2')
+                  '/Users/yuyara/Downloads/chromedriver 3', True)
     m.getText()
-    print(keywords)
+    m.save(m.keywords)
+    # print(keywords)
+    
