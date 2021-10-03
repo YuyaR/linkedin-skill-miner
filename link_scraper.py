@@ -37,8 +37,6 @@ class LinkScraper:
             # self.driver = webdriver.Chrome(
             #     options=options, executable_path=(chrome_path))
         except exceptions.WebDriverException:
-            sys.stderr.write(
-                "path to chrome driver not correct. Please select the right executable")
             raise ValueError(
                 "path to chrome driver not correct. Please select the right executable")
         self.action = ActionChains(self.driver)
@@ -65,7 +63,6 @@ class LinkScraper:
         if re.fullmatch('[a-zA-Z\s]+', job):
             self.__job = self._process(job)
         else:
-            sys.stderr.write('Not a valid job title')
             raise ValueError('Not a valid job title')
 
     @property
@@ -77,7 +74,6 @@ class LinkScraper:
         if re.fullmatch('[a-zA-Z\s]+', location):
             self.__location = self._process(location)
         else:
-            sys.stderr.write('Not a valid location')
             raise ValueError('Not a valid location')
 
     def _scroll(self):
@@ -143,8 +139,6 @@ class LinkScraper:
             listings = self.driver.find_element_by_xpath(
                 '//*[@id="main-content"]/section[2]/ul')  # contains all posts
         except exceptions.NoSuchElementException as exception:
-            sys.stderr.write(
-                "Can't find any jobs on Linkedin under the speficied condition")
             raise ValueError(
                 "Can't find any jobs on Linkedin under the speficied condition")
 
