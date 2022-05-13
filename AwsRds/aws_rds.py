@@ -1,15 +1,21 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import pandas as pd
 
 class AwsSQL:
     def __init__(self, job, loc):
-        DATABASE_TYPE = 'postgresql'
-        DBAPI = 'psycopg2'
-        ENDPOINT = 'career-skills.c6a6xhdjmptr.ap-northeast-1.rds.amazonaws.com'
-        USER = 'postgres'
-        PASSWORD = 'c8ydw9Ar8opmK8IRh78C'
-        PORT = 5432
-        DATABASE = 'postgres'
+
+        load_dotenv("../.env")
+
+        DATABASE_TYPE = os.environ["DATABASE_TYPE"]
+        DBAPI = os.environ["DBAPI"]
+        ENDPOINT = os.environ["ENDPOINT"]
+        USER = os.environ["USER"]
+        PASSWORD = os.environ["PASSWORD"]
+        PORT = os.environ["PORT"]
+        DATABASE = os.environ["DATABASE"]
 
         self.engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
         self.job = job.replace(' ', '').capitalize()

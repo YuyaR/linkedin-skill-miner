@@ -10,5 +10,5 @@ setup(
     author_email='yuyacademia@gmail.com',
     license='agpl-3',
     packages=find_packages(),
-    install_requires=['selenium','pandas','matplotlib']
+    install_requires=['dotenv', 'selenium','pandas','matplotlib']
 )
